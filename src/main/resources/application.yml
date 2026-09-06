@@ -1,0 +1,8 @@
+database:
+  dialect: org.hibernate.dialect.PostgreSQLDialect
+  driver: org.postgresql.Driver
+  url: jdbc:postgresql://postgres:5432/it_department
+  username: admin
+  password: admin
+  show_sql: true
+  hbm2ddl_auto: update
