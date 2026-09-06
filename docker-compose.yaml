@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-jdbc-lab
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: jdbc_lab
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pgdata:/var/lib/postgresql
+    networks:
+      - db-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-jdbc-lab
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    networks:
+      - db-network
+    depends_on:
+      - postgres
+
+networks:
+  db-network:
+    driver: bridge
+
+volumes:
+  pgdata:
