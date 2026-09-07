@@ -1,19 +1,158 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'jacoco'
+    id 'checkstyle'
+    id 'com.github.spotbugs' version '6.0.18'
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
-group = 'com.example'
+group = 'com.filmbase'
 version = '1.0-SNAPSHOT'
+
+ext {
+    versions = [
+            postgresql       : '42.7.4',
+            lombok           : '1.18.30',
+            junit            : '5.10.2',
+            assertj          : '3.24.2',
+            mockito          : '5.8.0',
+            testcontainers   : '1.19.7',
+            googleJavaFormat : '1.20.0',
+            checkstyle       : '10.12.5',
+            spotbugs         : '4.8.6'
+    ]
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    runtimeOnly "org.postgresql:postgresql:${versions.postgresql}"
+
+    compileOnly "org.projectlombok:lombok:${versions.lombok}"
+    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+    testCompileOnly "org.projectlombok:lombok:${versions.lombok}"
+    testAnnotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation platform("org.junit:junit-bom:${versions.junit}")
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation "org.assertj:assertj-core:${versions.assertj}"
+    testImplementation "org.mockito:mockito-core:${versions.mockito}"
+    testImplementation "org.testcontainers:testcontainers:${versions.testcontainers}"
+    testImplementation "org.testcontainers:junit-jupiter:${versions.testcontainers}"
+    testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat(versions.googleJavaFormat)
+                .aosp()
+                .reflowLongStrings()
+                .skipJavadocFormatting()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+checkstyle {
+    toolVersion = versions.checkstyle
+    configFile = file("${rootDir}/config/checkstyle/google_checks.xml")
+    maxErrors = 0
+    maxWarnings = 0
+    ignoreFailures = true
+}
+
+jacoco {
+    toolVersion = '0.8.11'
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/entity/**',
+                    '**/FilmbaseApplication.class'
+            ])
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.4
+            }
+        }
+        afterEvaluate {
+            getClassDirectories().setFrom(
+                    files(classDirectories.files.collect {
+                        fileTree(dir: it, exclude: [
+                                '**/entity/**',
+                                '**/FilmbaseApplication.class'
+                        ])
+                    })
+            )
+        }
+    }
+}
+
+spotbugs {
+    toolVersion = versions.spotbugs
+    ignoreFailures = true
+    showProgress = true
+}
+
+spotbugsMain {
+    reports {
+        xml.required = false
+        html.required = true
+    }
+}
+
+spotbugsTest {
+    reports {
+        xml.required = false
+        html.required = true
+    }
 }
 
 test {
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    finalizedBy jacocoTestReport
+}
+
+compileJava.dependsOn spotlessApply
+check.dependsOn spotlessCheck
+check.dependsOn jacocoTestCoverageVerification
+checkstyleMain.dependsOn spotlessCheck
+
+task formatAndCheck {
+    dependsOn spotlessApply, check
+    description = 'Форматирует код и выполняет все проверки'
 }
