@@ -1,0 +1,104 @@
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f2f4f7;
+}
+
+nav.navbar {
+    background: #2b2f38;
+}
+
+nav.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 24px;
+    display: flex;
+    gap: 20px;
+}
+
+nav.menu ul li a {
+    display: block;
+    padding: 14px 0;
+    color: #f2f4f7;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+nav.menu ul li a:hover {
+    color: #3766e8;
+}
+
+.container {
+    max-width: 900px;
+    margin: 24px auto;
+    padding: 0 16px;
+}
+
+.container h4 {
+    font-size: 18px;
+    color: #2b2f38;
+}
+
+.layer1,
+.layer2 {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.layer1 h2 {
+    margin-top: 0;
+    font-size: 16px;
+    color: #2b2f38;
+}
+
+table.container {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.container th,
+table.container td {
+    padding: 8px 10px;
+    border: 1px solid #e2e5eb;
+    text-align: left;
+    font-size: 14px;
+}
+
+table.container th {
+    background: #f7f8fa;
+}
+
+.login-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.login-form input[type="text"] {
+    padding: 8px 10px;
+    border: 1px solid #d3d8e0;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.button-main-page {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background: #3766e8;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.button-main-page:hover {
+    background: #2b52c4;
+}

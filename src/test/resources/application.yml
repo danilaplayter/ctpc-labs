@@ -1,0 +1,6 @@
+db:
+  driver: by.iba.testsupport.FakeDriver
+  url: jdbc:fake://localhost/testdb
+  user: test
+  password: test
+  poolsize: 2
