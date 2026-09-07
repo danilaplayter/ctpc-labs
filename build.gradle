@@ -1,19 +1,126 @@
 plugins {
     id 'java'
+    id 'war'
+    id 'jacoco'
+    id 'checkstyle'
+    id 'com.github.spotbugs' version '6.0.18'
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
-group = 'com.example'
+group = 'by.iba'
 version = '1.0-SNAPSHOT'
+
+ext {
+    versions = [
+            postgresql       : '42.7.4',
+            lombok           : '1.18.30',
+            slf4j            : '2.0.9',
+            logback          : '1.4.14',
+            snakeyaml        : '2.2',
+            commonsLang3     : '3.14.0',
+            jakartaServletApi: '6.0.0',
+            jakartaJstlApi   : '2.0.0',
+            jakartaJstlImpl  : '2.0.0',
+            junit            : '5.10.2',
+            assertj          : '3.24.2',
+            mockito          : '5.8.0',
+            testcontainers   : '1.19.7',
+            googleJavaFormat : '1.20.0',
+            checkstyle       : '10.12.5',
+            spotbugs         : '4.8.6'
+    ]
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
+    implementation "org.postgresql:postgresql:${versions.postgresql}"
+    implementation "org.yaml:snakeyaml:${versions.snakeyaml}"
+    implementation "org.apache.commons:commons-lang3:${versions.commonsLang3}"
+    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+    implementation "ch.qos.logback:logback-classic:${versions.logback}"
+
+    compileOnly "org.projectlombok:lombok:${versions.lombok}"
+    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+    testCompileOnly "org.projectlombok:lombok:${versions.lombok}"
+    testAnnotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+
+    providedCompile "jakarta.servlet:jakarta.servlet-api:${versions.jakartaServletApi}"
+
+    implementation "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:${versions.jakartaJstlApi}"
+    implementation "org.glassfish.web:jakarta.servlet.jsp.jstl:${versions.jakartaJstlImpl}"
+
+    testImplementation platform("org.junit:junit-bom:${versions.junit}")
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation "org.assertj:assertj-core:${versions.assertj}"
+    testImplementation "org.mockito:mockito-core:${versions.mockito}"
+    testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockito}"
+    testImplementation "org.testcontainers:testcontainers:${versions.testcontainers}"
+    testImplementation "org.testcontainers:junit-jupiter:${versions.testcontainers}"
+    testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+war {
+    archiveFileName = 'servlet-lab.war'
+}
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat(versions.googleJavaFormat).aosp().reflowLongStrings().skipJavadocFormatting()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+checkstyle {
+    toolVersion = versions.checkstyle
+    configFile = file("${rootDir}/config/checkstyle/google_checks.xml")
+    maxErrors = 0
+    maxWarnings = 0
+    ignoreFailures = true
+}
+
+jacoco {
+    toolVersion = '0.8.11'
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+}
+
+spotbugs {
+    toolVersion = versions.spotbugs
+    ignoreFailures = true
+    showProgress = true
 }
 
 test {
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+compileJava.dependsOn spotlessApply
+check.dependsOn spotlessCheck
+checkstyleMain.dependsOn spotlessCheck
+
+task formatAndCheck {
+    dependsOn spotlessApply, check
+    description = 'Форматирует код и выполняет все проверки'
 }

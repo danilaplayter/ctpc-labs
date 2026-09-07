@@ -1,0 +1,6 @@
+db:
+  driver: org.postgresql.Driver
+  url: jdbc:postgresql://localhost:5432/labdb
+  user: labuser
+  password: labpass
+  poolsize: 5
