@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <car>
+    <id>1</id>
+    <brand>Toyota</brand>
+    <model>Camry</model>
+    <year>2018</year>
+    <mileage>30000</mileage>
+    <price>25000</price>
+  </car>
+  <car>
+    <id>2</id>
+    <brand>BMW</brand>
+    <model>X5</model>
+    <year>2014</year>
+    <mileage>60000</mileage>
+    <price>22000</price>
+  </car>
+  <car>
+    <id>3</id>
+    <brand>Honda</brand>
+    <model>Accord</model>
+    <year>2016</year>
+    <mileage>45000</mileage>
+    <price>18000</price>
+  </car>
+  <car>
+    <id>4</id>
+    <brand>Ford</brand>
+    <model>Focus</model>
+    <year>2019</year>
+    <mileage>20000</mileage>
+    <price>15000</price>
+  </car>
+  <car>
+    <id>5</id>
+    <brand>Audi</brand>
+    <model>A4</model>
+    <year>2013</year>
+    <mileage>70000</mileage>
+    <price>12000</price>
+  </car>
+</catalog>

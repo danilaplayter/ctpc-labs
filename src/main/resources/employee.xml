@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Employees>
+    <Employee department="IT" id="1">
+        <name>Alice</name>
+        <gender>F</gender>
+        <age>28</age>
+        <role>Dev</role>
+        <email>a@a</email>
+        <phone>111</phone>
+        <address>Addr1</address>
+    </Employee>
+    <Employee department="IT" id="2">
+        <name>Bob</name>
+        <gender>M</gender>
+        <age>32</age>
+        <role>Mgr</role>
+        <email>b@b</email>
+        <phone>222</phone>
+        <address>Addr2</address>
+    </Employee>
+</Employees>
