@@ -13,7 +13,7 @@ public class MainSAX {
     public static void main(String[] args) {
         int filterYear = 2015;
         int filterMileage = 50000;
-        String path = "cars.xml";
+        String path = "C:\\Users\\danil\\IdeaProjects\\ctpc-labs\\src\\main\\resources\\cars.xml";
 
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();

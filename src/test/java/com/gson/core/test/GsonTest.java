@@ -53,7 +53,6 @@ class GsonTest {
 
         var err = new java.io.ByteArrayOutputStream();
         System.setErr(new java.io.PrintStream(err));
-        com.gson.core.ReadExample.main(
-                new String[0]);
+        com.gson.core.ReadExample.main(new String[0]);
     }
 }
